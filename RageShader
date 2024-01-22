@@ -1,0 +1,25 @@
+void main( )
+{
+
+	// Set frequency of global effect to 20 variations per second
+	//float t = float(int(timer * FREQUENCY));
+	
+	float t = clamp(timer / 6., 0., 1.);
+
+	vec2 coords = TexCoord.st;
+	vec2 dir = coords - vec2(.5);
+	
+	float dist = sqrt((coords.x - 0.5)*(coords.x - 0.5) + (coords.y - 0.5)*(coords.y - 0.5));
+	vec2 offset = dir * (sin(dist * 60. - timer*1.) + .1) / 20.;
+
+	vec2 texCoord = coords + offset;
+	vec3 diffuse = texture(InputTexture, texCoord).xyz;
+	
+	vec3 image = diffuse.xyz;//texture(InputTexture, TexCoord).xyz;
+	vec2 uv = TexCoord.xy;
+   
+	float luma = dot(vec3(0.8126, 1, 1), image );
+	luma *= pow(16.0 * uv.x * (1.0 - uv.x) * uv.y * (1.0 - uv.y), 0.4);
+	vec3 oldImage = luma * vec3(1, 0.2, 0.2);
+    FragColor.xyz =oldImage; 
+}
